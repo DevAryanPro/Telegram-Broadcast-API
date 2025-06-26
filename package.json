@@ -1,19 +1,18 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/api/broadcast",
-      "methods": ["GET", "POST"],
-      "dest": "/api/broadcast.js"
-    },
-    {
-      "src": "/api/check",
-      "methods": ["GET", "POST"],
-      "dest": "/api/check.js"
-    },
-    {
-      "src": "/",
-      "dest": "/api/broadcast.js"
-    }
-  ]
+  "name": "telegram-broadcast-api",
+  "version": "1.0.0",
+  "description": "Telegram Broadcast API with Membership Checker",
+  "main": "api/broadcast.js",
+  "scripts": {
+    "start": "node api/broadcast.js"
+  },
+  "dependencies": {
+    "telegraf": "^4.12.2",
+    "micro": "^9.4.0",
+    "axios": "^1.6.2"
+  },
+  "engines": {
+    "node": ">=16.x"
+  },
+  "license": "MIT"
 }
