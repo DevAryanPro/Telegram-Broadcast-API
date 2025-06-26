@@ -10,6 +10,10 @@
       "src": "/api/check",
       "methods": ["GET", "POST"],
       "dest": "/api/check.js"
+    },
+    {
+      "src": "/",
+      "dest": "/api/broadcast.js"
     }
   ]
 }
