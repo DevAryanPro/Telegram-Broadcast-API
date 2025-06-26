@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/broadcast",
+      "methods": ["GET", "POST"],
+      "dest": "/api/broadcast.js"
+    },
+    {
+      "src": "/api/check",
+      "methods": ["GET", "POST"],
+      "dest": "/api/check.js"
+    }
+  ]
+}
