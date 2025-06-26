@@ -67,16 +67,35 @@ module.exports = async (req, res) => {
     const bot = new Telegraf(botToken);
     
     try {
+      // Delete webhook first if it exists
+      await bot.telegram.deleteWebhook();
+      
       // Get all updates to find users who interacted with the bot
-      const updates = await bot.telegram.getUpdates();
-      const userIds = [...new Set(updates.map(update => update.message?.from.id))].filter(Boolean);
+      const updates = await bot.telegram.getUpdates({ limit: 100, offset: -100 });
+      const userIds = [...new Set(updates
+        .filter(update => update.message?.from?.id)
+        .map(update => update.message.from.id)
+      ];
+
+      if (userIds.length === 0) {
+        return res.status(200).json(createResponse('success', {
+          data: {
+            total_users: 0,
+            successful: 0,
+            failed: 0,
+            parse_mode: parseMode,
+            duration_seconds: 0,
+            message_length: fullMessage.length,
+            warning: "No users found in recent updates"
+          }
+        }));
+      }
 
       // Broadcast to all users
       const startTime = Date.now();
       const results = await Promise.allSettled(
         userIds.map(userId => 
           bot.telegram.sendMessage(userId, fullMessage, { parse_mode: parseMode })
-        )
       );
 
       const endTime = Date.now();
@@ -86,7 +105,7 @@ module.exports = async (req, res) => {
       const failed = results.filter(r => r.status === 'rejected').length;
       const failedUserIds = results
         .filter(r => r.status === 'rejected')
-        .map((r, i) => ({ user_id: userIds[i], reason: r.reason.message }));
+        .map((r, i) => ({ user_id: userIds[i], reason: r.reason?.message || 'Unknown error' }));
 
       return res.status(200).json(createResponse('success', {
         data: {
